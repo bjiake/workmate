@@ -1,0 +1,140 @@
+definitions:
+  Create:
+    properties:
+      name:
+        type: string
+      value:
+        type: integer
+    required:
+    - name
+    - value
+    type: object
+  Error:
+    properties:
+      error:
+        type: string
+    type: object
+  Task:
+    properties:
+      createdAt:
+        type: string
+      duration:
+        $ref: '#/definitions/time.Duration'
+      name:
+        type: string
+      status:
+        type: string
+      value:
+        type: integer
+    type: object
+  time.Duration:
+    enum:
+    - -9223372036854775808
+    - 9223372036854775807
+    - 1
+    - 1000
+    - 1000000
+    - 1000000000
+    - 60000000000
+    - 3600000000000
+    type: integer
+    x-enum-varnames:
+    - minDuration
+    - maxDuration
+    - Nanosecond
+    - Microsecond
+    - Millisecond
+    - Second
+    - Minute
+    - Hour
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+paths:
+  /task:
+    post:
+      consumes:
+      - application/json
+      description: Создает новую задачу
+      parameters:
+      - description: Создание задачи
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/Create'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Task'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+      summary: Создать новую задачу
+      tags:
+      - tasks
+  /task/{name}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет задачу по имени
+      parameters:
+      - description: Имя задачи
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+      summary: Удалить задачу по имени
+      tags:
+      - tasks
+    get:
+      consumes:
+      - application/json
+      description: Получает задачу по имени
+      parameters:
+      - description: Имя задачи
+        in: path
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Task'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+      summary: Получить задачу по имени
+      tags:
+      - tasks
+swagger: "2.0"
